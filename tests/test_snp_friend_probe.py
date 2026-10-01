@@ -396,3 +396,15 @@ def test_every_amd_verification_in_the_probe_reports_outages():
     source = inspect.getsource(probe.run_probe)
     assert source.count("_verify_or_inconclusive(") == 7
     assert not re.search(r"(?<![\w.])verify\(", source)
+
+
+def test_the_probe_collects_reports_without_fetching_amd_certificates():
+    # The verifier always fetches its own AMD certificates through the cache and
+    # never reads Evidence.cert_chain. A collector that also fetched them would
+    # add an uncached VCEK request per report, ahead of the verifier's, and
+    # trip KDS rate limiting. Use the production worker's report-only collector.
+    import inspect
+
+    source = inspect.getsource(probe.run_probe)
+    assert source.count("evidence_collector=collect_snp_report_only,") == 2
+    assert "evidence_collector=collect_snp," not in source

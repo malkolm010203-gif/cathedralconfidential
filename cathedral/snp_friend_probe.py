@@ -41,7 +41,7 @@ from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 from cryptography.x509.oid import NameOID
 
-from cathedral.attest import collect_snp
+from cathedral.attest import collect_snp_report_only
 from cathedral.channel import tls_spki_binding
 from cathedral.common import ChannelBinding, Evidence, Policy, Tier, issue_nonce
 from cathedral.lanes.sat import SatLane
@@ -315,7 +315,7 @@ def run_probe(review_challenge: bytes) -> dict[str, Any]:
                 "127.0.0.1",
                 0,
                 configured_hotkey=HOTKEY,
-                evidence_collector=collect_snp,
+                evidence_collector=collect_snp_report_only,
                 channel_binding=binding,
                 tls_context=server_context,
                 timeout=PROBE_TIMEOUT_SECONDS,
@@ -422,7 +422,7 @@ def run_probe(review_challenge: bytes) -> dict[str, Any]:
                 "127.0.0.1",
                 0,
                 configured_hotkey=SECOND_HOTKEY,
-                evidence_collector=collect_snp,
+                evidence_collector=collect_snp_report_only,
                 channel_binding=binding_2,
                 tls_context=server_context_2,
                 timeout=PROBE_TIMEOUT_SECONDS,
